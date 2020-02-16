@@ -172,14 +172,19 @@ class Puzzle:
             return False
 
 if __name__=="__main__":
+    """
+    This program takes user input from files.
+    So updating the input file and using that file name in the following code should do the work.
+    """
+
     print('Using heuristic 1: (Miss-placed Tiles)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state_6.txt')
-    p.get_state(state_name='goal', file_name='goal_state_6.txt')
+    p.get_state(state_name='initial', file_name='initial_state_1.txt')
+    p.get_state(state_name='goal', file_name='goal_state_1.txt')
     p.run(heuristic=1)
 
     print('Using heuristic 2: (Manhattan Distance)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state_6.txt')
-    p.get_state(state_name='goal', file_name='goal_state_6.txt')
+    p.get_state(state_name='initial', file_name='initial_state_1.txt')
+    p.get_state(state_name='goal', file_name='goal_state_1.txt')
     p.run(heuristic=2)
