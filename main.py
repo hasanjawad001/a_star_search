@@ -157,6 +157,7 @@ class Puzzle:
                 '''
                     printing path.
                 '''
+                print('===   PATH   ===')
                 path = []
                 cnode = current_node
                 path.append(cnode)
