@@ -28,10 +28,10 @@ class Node:
         self.g = g
         self.h = h
 
-    def __str__(self):
+    def print_state(self):
         for row in self.state:
             for col in row:
-                print (col, end=" ")
+                print(col, end=" ")
             print()
         return ""
 
@@ -71,8 +71,38 @@ class Puzzle:
     def get_f_score(self, source, dest):
         return self.get_g_score(source, dest) + self.get_h_score(source, dest)
 
+    def get_location(self, state, elem):
+        for r in range(self.n):
+            for c in range(self.n):
+                if state[r][c] == elem:
+                    return r,c
+
+    def swap_elem(self, state, r1, c1, r2, c2):
+        new_state = []
+        for row in state:
+            new_row = []
+            for col in row:
+                new_row.append(col)
+            new_state.append(new_row)
+        temp = new_state[r1][c1]
+        new_state[r1][c1] = new_state[r2][c2]
+        new_state[r2][c2] = temp
+        return new_state
+
     def expand(self, current_node):
+        r_blank, c_blank = self.get_location(current_node.state, '0')
+        possible_options = [[r_blank, c_blank+1], [r_blank-1, c_blank], [r_blank, c_blank-1], [r_blank+1, c_blank]]
+        possible_children = []
+        for opt in possible_options:
+            r = opt[0]
+            c = opt[1]
+            if r >= 0 and c >= 0 and r <= self.n-1 and c <= self.n-1:
+                possible_children.append(opt)
         children = []
+        for pc in possible_children:
+            child_state = self.swap_elem(current_node.state, r_blank, c_blank, pc[0], pc[1])
+            child_node = Node(child_state, current_node.depth+1, None, current_node.depth+1, None)
+            children.append(child_node)
         return children
 
     def run(self, heuristic=1):
@@ -82,7 +112,7 @@ class Puzzle:
         while len(self.frontier) != 0:
             current_node = self.frontier[0]
             self.frontier.remove(current_node)
-            print(current_node)
+            print(current_node.print_state())
             print()
             print()
             if self.is_goal(current_node):
