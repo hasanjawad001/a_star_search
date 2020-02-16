@@ -1,9 +1,8 @@
 """
+REQUIREMENT:
 In addition to coding of A* search algorithm, provide state space representation, operators,
 g (cost) and two heuristic functions of the 8-puzzle problem. Your program should accept
-initial and goal states from user and will compute the best path. You will turn in the
-following as hard copy directly to me in the class, in addition to submitting everything in
-canvas:
+initial and goal states from user and will compute the best path.
 ● A report covering 8-puzzle problem formulation, program structure, global variables,
 functions and procedures, etc. [10 points]
 ● Analyze six input/output cases:
@@ -14,34 +13,49 @@ and (3) the number of nodes expanded.
 ■ Total 54 points [27 + 27]
 ○ Summarize the results in a table. [6 points]
 ● Error free source code with adequate inline documentation.
-● Quality of the report and code (e.g. taking user input) [5 points]
-Sample initial and goal states:
 """
 
 import math
 
 class Node:
+    """
+    This class creates Node object based on each state.
+    Keeps additional info of a state
+    """
     def __init__(self, state=None, depth=None, f=None, g=None, h=None):
         self.state = state
         self.depth = depth
         self.f = f
-        self.g = g
-        self.h = h
 
     def print_state(self):
+        l=len(self.state)
+        c=0
         for row in self.state:
             for col in row:
                 print(col, end=" ")
-            print()
+            if c!= l-1:
+                print()
+            c+=1
         return ""
 
+
 class Puzzle:
+    """
+    The main class of an n-puzzle problem.
+    Here according to the assignment no_tiles = 8 has been used.
+    """
     def __init__(self, no_tiles=8):
         self.n = int(math.sqrt(no_tiles+1))
         self.frontier = []
         self.explored = []
 
     def get_state(self, state_name='', file_name=''):
+        """
+        Forms states and nodes based on the user input (from file with the provided file name)
+        :param state_name: which state to form i.e. 'initial' or 'goal'
+        :param file_name: file to take the user input from
+        :return:
+        """
         lines = []
         with open(file_name) as f:
             lines = f.readlines()
@@ -54,9 +68,21 @@ class Puzzle:
             self.goal_node = Node(self.goal_state, None, None, None, 0)
 
     def get_g_score(self, source, dest):
+        """
+        A measure to reach the source node from the initial.
+        :param source: Node which g(n) value to measure
+        :param dest: UNUSED
+        :return: g(n) where n is the source node
+        """
         return source.depth
 
     def get_h_score(self, source, dest):
+        """
+        A measure of heuristic value from the source node to goal/dest node.
+        :param source: Node which h(n) value is to be measured
+        :param dest: Goal Node
+        :return: h(n) where n is the source node
+        """
         h_score = 0
         if self.heuristic == 1:
             for i in range(self.n):
@@ -64,14 +90,23 @@ class Puzzle:
                     if source.state[i][j] != '0' and source.state[i][j] != dest.state[i][j]:
                         h_score += 1
         if self.heuristic == 2:
-            #TODO: inplement
-            pass
+            for i in range(self.n):
+                for j in range(self.n):
+                    if source.state[i][j] != '0' and source.state[i][j] != dest.state[i][j]:
+                        dest_i, dest_j = self.get_location(dest.state, source.state[i][j])
+                        h_score += abs(dest_i-i) + abs(dest_j-j)
         return h_score
 
     def get_f_score(self, source, dest):
         return self.get_g_score(source, dest) + self.get_h_score(source, dest)
 
     def get_location(self, state, elem):
+        """
+        To Find the row and column of the element in the state
+        :param state: A list of list representing the state
+        :param elem: value for which row and column index needs to be found
+        :return: row and column index of elem in state
+        """
         for r in range(self.n):
             for c in range(self.n):
                 if state[r][c] == elem:
@@ -90,6 +125,11 @@ class Puzzle:
         return new_state
 
     def expand(self, current_node):
+        """
+        Expands the current node to generate the child nodes
+        :param current_node: node which needs to be expanded
+        :return: list of child
+        """
         r_blank, c_blank = self.get_location(current_node.state, '0')
         possible_options = [[r_blank, c_blank+1], [r_blank-1, c_blank], [r_blank, c_blank-1], [r_blank+1, c_blank]]
         possible_children = []
@@ -113,7 +153,7 @@ class Puzzle:
             current_node = self.frontier[0]
             self.frontier.remove(current_node)
             print(current_node.print_state())
-            print()
+            print('h(n) =',self.get_h_score(current_node, self.goal_node))
             print()
             if self.is_goal(current_node):
                 print('Goal State Reached!!!')
@@ -126,20 +166,25 @@ class Puzzle:
             self.explored.append(current_node)
 
     def is_goal(self, node):
+        """
+        Goal testing of a node
+        :param node: node which needs to be checked
+        :return: Boolean whether the node is the goal or not
+        """
         if self.get_h_score(node, self.goal_node) == 0:
             return True
         else:
             return False
 
 if __name__=="__main__":
+    print('Using heuristic 1: (Miss-placed Tiles)')
     p = Puzzle(no_tiles=8)
     p.get_state(state_name='initial', file_name='initial_state.txt')
     p.get_state(state_name='goal', file_name='goal_state.txt')
-
-    ''' using heuristic 1 '''
-    print('Using heuristic 1: Miss-placed Tiles')
     p.run(heuristic=1)
 
-    ''' using heuristic 2 '''
-    print('Using heuristic 2: Manhattan Distance')
+    print('Using heuristic 2: (Manhattan Distance)')
+    p = Puzzle(no_tiles=8)
+    p.get_state(state_name='initial', file_name='initial_state.txt')
+    p.get_state(state_name='goal', file_name='goal_state.txt')
     p.run(heuristic=2)
