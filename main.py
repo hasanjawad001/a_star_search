@@ -134,12 +134,15 @@ class Puzzle:
         return children
 
     def run(self, heuristic=1):
+        no_node_generated = 1
+        no_node_expanded = 0
         self.heuristic = heuristic
         self.initial_node.f = self.get_f_score(self.initial_node, self.goal_node)
         self.frontier.append(self.initial_node)
         while len(self.frontier) != 0:
             current_node = self.frontier[0]
             self.frontier.remove(current_node)
+            no_node_expanded += 1
             print(current_node.print_state())
             print(
                 'g=%s, h=%s, f=%s'%(
@@ -150,11 +153,14 @@ class Puzzle:
             print()
             if self.is_goal(current_node):
                 print('Goal State Reached!!!')
+                print('No of Nodes Generated : %s'%(no_node_generated,))
+                print('No of Nodes Expanded : %s'%(no_node_expanded,))
                 print('=====================')
                 print()
                 return
             children = self.expand(current_node)
             for child in children:
+                no_node_generated += 1
                 child.f = self.get_f_score(child, self.goal_node)
                 self.frontier.append(child)
             self.frontier.sort(key=lambda x: x.f, reverse=False)
@@ -179,12 +185,12 @@ if __name__=="__main__":
 
     print('Using heuristic 1: (Miss-placed Tiles)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state_1.txt')
-    p.get_state(state_name='goal', file_name='goal_state_1.txt')
+    p.get_state(state_name='initial', file_name='initial_state_5.txt')
+    p.get_state(state_name='goal', file_name='goal_state_5.txt')
     p.run(heuristic=1)
 
     print('Using heuristic 2: (Manhattan Distance)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state_1.txt')
-    p.get_state(state_name='goal', file_name='goal_state_1.txt')
+    p.get_state(state_name='initial', file_name='initial_state_5.txt')
+    p.get_state(state_name='goal', file_name='goal_state_5.txt')
     p.run(heuristic=2)
