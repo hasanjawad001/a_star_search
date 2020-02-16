@@ -157,6 +157,8 @@ class Puzzle:
             print()
             if self.is_goal(current_node):
                 print('Goal State Reached!!!')
+                print('=====================')
+                print()
                 return
             children = self.expand(current_node)
             for child in children:
