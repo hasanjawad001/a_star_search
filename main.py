@@ -1,18 +1,6 @@
 """
-REQUIREMENT:
-In addition to coding of A* search algorithm, provide state space representation, operators,
-g (cost) and two heuristic functions of the 8-puzzle problem. Your program should accept
-initial and goal states from user and will compute the best path.
-● A report covering 8-puzzle problem formulation, program structure, global variables,
-functions and procedures, etc. [10 points]
-● Analyze six input/output cases:
-○ For each input/output sample, for each heuristic report the following: (1) The
-solution path from initial state to goal state (2) the number of nodes generated,
-and (3) the number of nodes expanded.
-■ For each heuristic (6 x (1.5 + 1.5 + 1.5)) = 27 points
-■ Total 54 points [27 + 27]
-○ Summarize the results in a table. [6 points]
-● Error free source code with adequate inline documentation.
+    Implementation of A* search with 2 heuristics.
+    author: Jawad Chowdhury.
 """
 
 import math
