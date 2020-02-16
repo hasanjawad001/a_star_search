@@ -174,12 +174,12 @@ class Puzzle:
 if __name__=="__main__":
     print('Using heuristic 1: (Miss-placed Tiles)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state.txt')
-    p.get_state(state_name='goal', file_name='goal_state.txt')
+    p.get_state(state_name='initial', file_name='initial_state_6.txt')
+    p.get_state(state_name='goal', file_name='goal_state_6.txt')
     p.run(heuristic=1)
 
     print('Using heuristic 2: (Manhattan Distance)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state.txt')
-    p.get_state(state_name='goal', file_name='goal_state.txt')
+    p.get_state(state_name='initial', file_name='initial_state_6.txt')
+    p.get_state(state_name='goal', file_name='goal_state_6.txt')
     p.run(heuristic=2)
