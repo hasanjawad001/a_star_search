@@ -10,10 +10,11 @@ class Node:
     This class creates Node object based on each state.
     Keeps additional info of a state
     """
-    def __init__(self, state=None, depth=None, f=None, g=None, h=None):
+    def __init__(self, state=None, depth=None, f=None, parent=None):
         self.state = state
         self.depth = depth
         self.f = f
+        self.parent = parent
 
     def print_state(self):
         l=len(self.state)
@@ -50,10 +51,10 @@ class Puzzle:
             state = [line.strip('\n').split(' ') for line in lines]
         if state_name=='initial':
             self.initial_state = state
-            self.initial_node = Node(self.initial_state, 0, None, 0, None)
+            self.initial_node = Node(self.initial_state, 0, None, None)
         elif state_name=='goal':
             self.goal_state = state
-            self.goal_node = Node(self.goal_state, None, None, None, 0)
+            self.goal_node = Node(self.goal_state, None, None, None)
 
     def get_g_score(self, source, dest):
         """
@@ -129,7 +130,7 @@ class Puzzle:
         children = []
         for pc in possible_children:
             child_state = self.swap_elem(current_node.state, r_blank, c_blank, pc[0], pc[1])
-            child_node = Node(child_state, current_node.depth+1, None, current_node.depth+1, None)
+            child_node = Node(child_state, current_node.depth+1, None, current_node)
             children.append(child_node)
         return children
 
@@ -143,16 +144,29 @@ class Puzzle:
             current_node = self.frontier[0]
             self.frontier.remove(current_node)
             no_node_expanded += 1
-            print(current_node.print_state())
-            print(
-                'g=%s, h=%s, f=%s'%(
-                self.get_g_score(current_node, self.goal_node),
-                self.get_h_score(current_node, self.goal_node),
-                self.get_f_score(current_node, self.goal_node)
-            ))
-            print()
+            # print(current_node.print_state())
+            # print(
+            #     'g=%s, h=%s, f=%s'%(
+            #     self.get_g_score(current_node, self.goal_node),
+            #     self.get_h_score(current_node, self.goal_node),
+            #     self.get_f_score(current_node, self.goal_node)
+            # ))
+            # print()
             if self.is_goal(current_node):
                 print('Goal State Reached!!!')
+                '''
+                    printing path.
+                '''
+                path = []
+                cnode = current_node
+                path.append(cnode)
+                while cnode.parent != None:
+                    path.append(cnode.parent)
+                    cnode = cnode.parent
+                path.reverse()
+                for node in path:
+                    print(node.print_state())
+                    print()
                 print('No of Nodes Generated : %s'%(no_node_generated,))
                 print('No of Nodes Expanded : %s'%(no_node_expanded,))
                 print('=====================')
@@ -185,12 +199,12 @@ if __name__=="__main__":
 
     print('Using heuristic 1: (Miss-placed Tiles)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state_5.txt')
-    p.get_state(state_name='goal', file_name='goal_state_5.txt')
+    p.get_state(state_name='initial', file_name='initial_state_6.txt')
+    p.get_state(state_name='goal', file_name='goal_state_6.txt')
     p.run(heuristic=1)
 
     print('Using heuristic 2: (Manhattan Distance)')
     p = Puzzle(no_tiles=8)
-    p.get_state(state_name='initial', file_name='initial_state_5.txt')
-    p.get_state(state_name='goal', file_name='goal_state_5.txt')
+    p.get_state(state_name='initial', file_name='initial_state_6.txt')
+    p.get_state(state_name='goal', file_name='goal_state_6.txt')
     p.run(heuristic=2)
