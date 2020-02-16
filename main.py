@@ -141,7 +141,12 @@ class Puzzle:
             current_node = self.frontier[0]
             self.frontier.remove(current_node)
             print(current_node.print_state())
-            print('h(n) =',self.get_h_score(current_node, self.goal_node))
+            print(
+                'g=%s, h=%s, f=%s'%(
+                self.get_g_score(current_node, self.goal_node),
+                self.get_h_score(current_node, self.goal_node),
+                self.get_f_score(current_node, self.goal_node)
+            ))
             print()
             if self.is_goal(current_node):
                 print('Goal State Reached!!!')
